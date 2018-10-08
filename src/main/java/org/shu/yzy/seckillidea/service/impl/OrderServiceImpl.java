@@ -1,7 +1,9 @@
 package org.shu.yzy.seckillidea.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import org.shu.yzy.seckillidea.dao.OrderInfoDao;
 import org.shu.yzy.seckillidea.domain.OrderInfo;
+import org.shu.yzy.seckillidea.domain.Page;
 import org.shu.yzy.seckillidea.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderInfo> getUserOrderInfoList(long userId) {
-        return orderInfoDao.getUserOrderInfoList(userId);
+        List<OrderInfo> list = orderInfoDao.getUserOrderInfoList(userId);
+        return list;
     }
 
     @Override

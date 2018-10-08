@@ -1,6 +1,7 @@
 package org.shu.yzy.seckillidea.service.impl;
 
 import org.shu.yzy.seckillidea.Enum.ResultEnum;
+import org.shu.yzy.seckillidea.access.AccessLimit;
 import org.shu.yzy.seckillidea.dao.GoodDao;
 import org.shu.yzy.seckillidea.dao.OrderInfoDao;
 import org.shu.yzy.seckillidea.dto.SeckillAction;

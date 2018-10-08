@@ -2,6 +2,7 @@ package org.shu.yzy.seckillidea.dao;
 
 import org.apache.ibatis.annotations.*;
 import org.shu.yzy.seckillidea.domain.OrderInfo;
+import org.shu.yzy.seckillidea.domain.Page;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 

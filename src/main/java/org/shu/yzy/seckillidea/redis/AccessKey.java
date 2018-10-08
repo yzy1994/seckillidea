@@ -6,7 +6,7 @@ public class AccessKey extends BasePrefix{
         super(prefix, expireSeconds);
     }
 
-    public static AccessKey withExpire(int expireSeconds){
-        return new AccessKey("access", expireSeconds);
+    public static AccessKey getAccessKey(int seconds){
+        return new AccessKey("access", seconds);
     }
 }

@@ -1,9 +1,12 @@
 package org.shu.yzy.seckillidea.dao;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.shu.yzy.seckillidea.dao.OrderInfoDao;
 import org.shu.yzy.seckillidea.domain.OrderInfo;
+import org.shu.yzy.seckillidea.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
@@ -37,8 +40,9 @@ public class OrderInfoDaoTest {
 
     @Test
     public void testSelect() {
-        List<OrderInfo> orderInfoList = orderInfoDao.getOrderInfoList();
-        for(OrderInfo orderInfo: orderInfoList){
+        List<OrderInfo> list = orderInfoDao.getSeckillOrderInfoList(seckillId);
+
+        for(OrderInfo orderInfo: list){
             System.out.println(orderInfo);
         }
     }

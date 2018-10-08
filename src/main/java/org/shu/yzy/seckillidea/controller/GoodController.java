@@ -2,6 +2,7 @@ package org.shu.yzy.seckillidea.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.shu.yzy.seckillidea.Enum.ResultEnum;
+import org.shu.yzy.seckillidea.access.AccessLimit;
 import org.shu.yzy.seckillidea.domain.MiaoshaUser;
 import org.shu.yzy.seckillidea.redis.GoodKey;
 import org.shu.yzy.seckillidea.redis.RedisService;
@@ -33,9 +34,9 @@ public class GoodController extends BaseController {
     @Autowired
     RedisService redisService;
 
+    @AccessLimit(maxCount = 5, seconds = 10)
     @RequestMapping(value = "/list")
     public String list(MiaoshaUser user, HttpServletRequest request, HttpServletResponse response, Model model) {
-        log.info("访问了列表页");
         model.addAttribute("user", user);
         String cachedHtml = redisService.get(GoodKey.getGoodList, "", String.class);;
         if(StringUtils.isEmpty(cachedHtml)) {
@@ -46,6 +47,7 @@ public class GoodController extends BaseController {
         return render(request, response, model, "goods_list", GoodKey.getGoodList, "", cachedHtml);
     }
 
+    @AccessLimit(maxCount = 5, seconds = 10)
     @RequestMapping("/detail/{goodId}")
     @ResponseBody
     public Result<GoodDetailVO> detail(@PathVariable("goodId") long goodId, MiaoshaUser user) {
@@ -71,8 +73,6 @@ public class GoodController extends BaseController {
         if (goodVO == null) {
             return Result.getResult(ResultEnum.SECKILL_NOT_EXIST);
         }
-
-        mv.addObject("goodVO", goodVO);
 
         long startTime = goodVO.getStartDate().getTime();
         long endTime = goodVO.getEndDate().getTime();

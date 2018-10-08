@@ -3,6 +3,7 @@ package org.shu.yzy.seckillidea.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.shu.yzy.seckillidea.Enum.ResultEnum;
+import org.shu.yzy.seckillidea.access.AccessLimit;
 import org.shu.yzy.seckillidea.dao.MiaoshaUserDao;
 import org.shu.yzy.seckillidea.domain.MiaoshaUser;
 import org.shu.yzy.seckillidea.domain.Page;
@@ -59,6 +60,7 @@ public class SeckillController implements InitializingBean {
      * 获取秒杀验证码
      * goodId 秒杀项的Id
      */
+    @AccessLimit(maxCount = 2, seconds = 10)
     @RequestMapping("/path/{goodId}")
     @ResponseBody
     public Result<String> getSeckillPath(@PathVariable("goodId") long goodId, MiaoshaUser user) {
@@ -117,6 +119,7 @@ public class SeckillController implements InitializingBean {
      * @param user   当前用户
      * @return
      */
+    @AccessLimit(maxCount = 1, seconds = 10)
     @RequestMapping("/execute/{vc}/{goodId}/{picvc}")
     @ResponseBody
     public Result<ResultEnum> executeSeckill(@PathVariable("goodId") long goodId,
@@ -153,8 +156,8 @@ public class SeckillController implements InitializingBean {
     @RequestMapping("/execute/{goodId}")
     @ResponseBody
     public Result<ResultEnum> executeSeckill(@PathVariable("goodId") long goodId,
-                                             MiaoshaUser user){
-        if(user==null){
+                                             MiaoshaUser user) {
+        if (user == null) {
             log.info("用户未登录");
             return Result.getResult(ResultEnum.SESSION_ERROR);
         }
@@ -192,10 +195,12 @@ public class SeckillController implements InitializingBean {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/verifyCode/{goodId}", method = RequestMethod.GET)
+    @AccessLimit(maxCount = 2, seconds = 5)
+    @RequestMapping(value = "/verifyCode/{goodId}/{timestamp}", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getSeckillVerifyCode(MiaoshaUser user, @PathVariable("goodId") long goodId,
-                                               HttpServletResponse response) {
+                                               HttpServletResponse response,
+                                               @PathVariable("timestamp") long timestamp) {
         SeckillGood seckillGood = getSeckillGood(goodId, GoodKey.getSeckillGoodKey);
         long nowTimestamp = System.currentTimeMillis();
         if (nowTimestamp < seckillGood.getStartDate().getTime()) {
@@ -223,7 +228,9 @@ public class SeckillController implements InitializingBean {
         }
     }
 
-    /** 用户轮询获取 即时秒杀结果(redis保存10分钟) 接口 */
+    /**
+     * 用户轮询获取 即时秒杀结果(redis保存10分钟) 接口
+     */
     @RequestMapping(value = "/result/{seckillId}", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getSeckillResult(@PathVariable("seckillId") long seckillId,
@@ -271,15 +278,17 @@ public class SeckillController implements InitializingBean {
         generateTestSession();
     }
 
-    /** 生成测试用Session 前1000个用户 token=userId */
-    private  void generateTestSession(){
+    /**
+     * 生成测试用Session 前1000个用户 token=userId
+     */
+    private void generateTestSession() {
         Page page = new Page(0, 1000);
         List<MiaoshaUser> userList = miaoshaUserDao.getUserList(page);
-        for(MiaoshaUser user: userList){
+        for (MiaoshaUser user : userList) {
             System.out.println(user);
         }
 
-        for(MiaoshaUser user: userList){
+        for (MiaoshaUser user : userList) {
             String token = String.valueOf(user.getId());
             redisService.set(MiaoshaUserKey.token, token, user);
         }

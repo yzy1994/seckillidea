@@ -1,6 +1,7 @@
 package org.shu.yzy.seckillidea.service;
 
 import org.shu.yzy.seckillidea.domain.OrderInfo;
+import org.shu.yzy.seckillidea.domain.Page;
 
 import java.util.List;
 
