@@ -153,9 +153,7 @@ public class SeckillController implements InitializingBean {
         return executeSeckill(goodId, user);
     }
 
-    @RequestMapping("/execute/{goodId}")
-    @ResponseBody
-    public Result<ResultEnum> executeSeckill(@PathVariable("goodId") long goodId,
+    private Result<ResultEnum> executeSeckill(@PathVariable("goodId") long goodId,
                                              MiaoshaUser user) {
         if (user == null) {
             log.info("用户未登录");
@@ -189,11 +187,7 @@ public class SeckillController implements InitializingBean {
 
     /**
      * 获取图形验证码
-     *
-     * @param user
-     * @param goodId   秒杀项Id
-     * @param response
-     * @return
+     * @param goodId 秒杀项Id
      */
     @AccessLimit(maxCount = 2, seconds = 5)
     @RequestMapping(value = "/verifyCode/{goodId}/{timestamp}", method = RequestMethod.GET)
@@ -256,7 +250,7 @@ public class SeckillController implements InitializingBean {
     }
 
     /**
-     * 系统初始化
+     * 系统初始化 载入秒杀项列表和秒杀项缓存
      */
     @Override
     public void afterPropertiesSet() throws Exception {

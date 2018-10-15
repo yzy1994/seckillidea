@@ -5,9 +5,12 @@ import lombok.Data;
 @Data
 public class Page {
 
-    private int start; //开始页数
-    private int count; //每页显示个数
-    private int total; //总个数
+    /** 起始页 */
+    private int start;
+    /** 每页的数据项数目 */
+    private int count;
+    /** 数据项总数 */
+    private int total;
 
     private static final int defaultCount = 5; //默认每页显示5条
 
